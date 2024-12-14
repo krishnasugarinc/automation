@@ -20,7 +20,9 @@ jobs:
       run: |
         sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no root@206.189.138.180 << 'EOF'
           cd /root/automation
-          git pull origin main
+          sudo git stash
+          sudo git pull origin main
+          sudo git stash pop
           # Restart your app or perform other necessary steps
           # Example: systemctl restart your-app
         EOF
