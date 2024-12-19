@@ -20,11 +20,7 @@ jobs:
       run: |
         sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no root@206.189.138.180 << 'EOF'
           cd /root/automation
-          git stash || true
-          git pull origin main || true
-          git stash pop || true
-          git add .
-          git commit -m "Auto-resolve conflicts [ci skip]" || true
+          git pull origin main
           # Restart your app or perform other necessary steps
           # Example: systemctl restart your-app
         EOF
