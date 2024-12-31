@@ -14,13 +14,30 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Install sshpass
-      run: sudo apt-get install sshpass
+      run: sudo apt-get install -y sshpass
 
     - name: Deploy to Droplet
       run: |
         sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no root@206.189.138.180 << 'EOF'
           cd /root/automation
-          git pull origin main
-          # Restart your app or perform other necessary steps
+          # Backup local changes
+          if [ "$(git status --porcelain)" ]; then
+            echo "Stashing local changes..."
+            git stash
+          fi
+
+          # Pull latest changes from the repository
+          echo "Pulling latest changes..."
+          git pull origin main --rebase
+
+          # Reapply local changes, if any
+          if git stash list | grep -q 'stash@{0}'; then
+            echo "Reapplying stashed changes..."
+            git stash pop
+          fi
+
+          # Optional: Restart your app or perform necessary steps
           # Example: systemctl restart your-app
+
+          echo "Deployment complete."
         EOF
