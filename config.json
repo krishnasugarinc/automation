@@ -1,0 +1,49 @@
+﻿{
+    "frameworkdatabase": {
+        "host": "localhost",
+        "port": 3306,
+        "user": "root",
+        "password": "naveen123",
+        "database": "helpi_helpers_framework_db"
+    },
+    "moduledatabase": {
+        "host": "localhost",
+        "port": 3306,
+        "user": "root",
+        "password": "naveen123",
+        "database": "helpi_helpers_modules_db"
+    },
+    "adminmoduledatabase": {
+        "host": "localhost",
+        "port": 3306,
+        "user": "root",
+        "password": "naveen123",
+        "database": "helpi_admin_module_db"
+    },
+    "secret": "This_is_a_secret_string",
+    "emailFrom": "info@node-api-app",
+    "smtpOptions": {
+        "host": "smtp.ethereal.email",
+        "port": 587,
+        "auth": {
+            "user": "rodrick.baumbach85@ethereal.email",
+            "pass": "5JTgf9XVjaE683qmeA"
+        }
+    },
+    "username_allowed_types": {
+        "key1": "email",
+        "key2": "mobile",
+        "Key3": "mobile-single-device"
+    },
+    "authentication_allowed_types": {
+        "key1": "password",
+        "key2": "otp",
+        "Key3": "2fa"
+    },
+    "username_type": "mobile",
+    "authentication_type": "password",
+    "app_type": "web_app",
+    "user_signup": "true",
+    "onboarding_step": "true",
+    "single_signup": "true"
+}
