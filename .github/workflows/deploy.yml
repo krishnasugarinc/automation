@@ -13,19 +13,32 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Install sshpass
-      run: sudo apt-get install -y sshpass
+    - name: Install jq and sshpass
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y sshpass jq
 
     - name: Deploy to Droplet
       run: |
         sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no root@206.189.138.180 << 'EOF'
-          echo "Updating config.json with database credentials..."
-          echo '{
-            "host": "${{ secrets.DB_HOST }}",
-            "user": "${{ secrets.DB_USER }}",
-            "password": "${{ secrets.DB_PASSWORD }}"
-          }' > /root/automation/config.json
+          # Backup the current config file
+          cp /root/automation/config.json /root/automation/config.json.bak
 
+          # Update only the database credentials
+          jq '.frameworkdatabase.host="${{ secrets.DB_HOST }}" |
+              .frameworkdatabase.user="${{ secrets.DB_USER }}" |
+              .frameworkdatabase.password="${{ secrets.DB_PASSWORD }}" |
+              .moduledatabase.host="${{ secrets.DB_HOST }}" |
+              .moduledatabase.user="${{ secrets.DB_USER }}" |
+              .moduledatabase.password="${{ secrets.DB_PASSWORD }}" |
+              .adminmoduledatabase.host="${{ secrets.DB_HOST }}" |
+              .adminmoduledatabase.user="${{ secrets.DB_USER }}" |
+              .adminmoduledatabase.password="${{ secrets.DB_PASSWORD }}"' \
+              /root/automation/config.json > /root/automation/config.json.tmp
+
+          mv /root/automation/config.json.tmp /root/automation/config.json
+
+          # Ensure the application uses the updated config
           cd /root/automation
           git pull origin main
           # Restart your app or perform other necessary steps
