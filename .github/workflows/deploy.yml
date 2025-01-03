@@ -18,7 +18,7 @@ jobs:
 
     - name: Deploy to Droplet
       run: |
-        sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no root@206.189.138.180 bash <<EOF
+        sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no root@206.189.138.180 << 'EOF'
           echo "Updating config.json with database credentials..."
           echo '{
             "host": "${{ secrets.DB_HOST }}",
@@ -30,4 +30,4 @@ jobs:
           git pull origin main
           # Restart your app or perform other necessary steps
           # Example: systemctl restart your-app
-EOF
+        EOF
