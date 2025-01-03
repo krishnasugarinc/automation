@@ -14,13 +14,13 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Install sshpass
-      run: sudo apt-get install sshpass
+      run: sudo apt-get install -y sshpass
 
     - name: Deploy to Droplet
       run: |
-        sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no root@206.189.138.180 << 'EOF'
+        sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no root@206.189.138.180 <<EOF
           echo "Updating config.json with database credentials..."
-          cat > /root/automation/config.json << CONFIG
+          cat > /root/automation/config.json <<CONFIG
           {
             "host": "${{ secrets.DB_HOST }}",
             "user": "${{ secrets.DB_USER }}",
@@ -31,9 +31,4 @@ CONFIG
           git pull origin main
           # Restart your app or perform other necessary steps
           # Example: systemctl restart your-app
-        EOF
-
-# Notes:
-# 1. Replace `DB_HOST`, `DB_USER`, and `DB_PASSWORD` with your GitHub Secrets names.
-# 2. Ensure `config.json` is not accidentally overwritten elsewhere or added to `.gitignore`.
-# 3. If you need additional database configuration fields, they can be added similarly in the `cat` block.
+EOF
