@@ -21,10 +21,7 @@ jobs:
     - name: Deploy to Droplet
       run: |
         sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no root@206.189.138.180 << 'EOF'
-          # Backup the current config file
-          cp /root/automation/config.json /root/automation/config.json.bak
-
-          # Update only the database credentials
+          # Update only the database credentials directly in config.json
           jq '.frameworkdatabase.host="${{ secrets.DB_HOST }}" |
               .frameworkdatabase.user="${{ secrets.DB_USER }}" |
               .frameworkdatabase.password="${{ secrets.DB_PASSWORD }}" |
@@ -34,9 +31,7 @@ jobs:
               .adminmoduledatabase.host="${{ secrets.DB_HOST }}" |
               .adminmoduledatabase.user="${{ secrets.DB_USER }}" |
               .adminmoduledatabase.password="${{ secrets.DB_PASSWORD }}"' \
-              /root/automation/config.json > /root/automation/config.json.tmp
-
-          mv /root/automation/config.json.tmp /root/automation/config.json
+              /root/automation/config.json > /root/automation/config.json
 
           # Ensure the application uses the updated config
           cd /root/automation
